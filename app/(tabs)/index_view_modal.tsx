@@ -5,9 +5,6 @@ import { useState } from "react";
 import * as ImagePicker from "expo-image-picker"
 import Button from "@/components/Button";
 import ImageViewer from "@/components/ImageViewer";
-import IconButton from "@/components/IconButton";
-import CircleButton from "@/components/CircleButton";
-import EmojiPicker from "@/components/EmojiPicker";
 
 
 const PlaceholderImage = require("@/assets/images/tutorial/background-image.png");
@@ -18,9 +15,6 @@ export default function Index() {
   const[selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
   // show these options after an image is picked/selected
   const[showAppOptions, setShowAppOptions] = useState<boolean>(false);
-  // when user press the Add moji sticker, the state will become true
-  const[isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
 
   async function pickImageAsync() {
     // launch image gallery
@@ -41,34 +35,12 @@ export default function Index() {
     }
   };
 
-  // handler for app option buttons
-  
-  // reset the view
-  function onReset(){
-    setShowAppOptions(false);
-  }
-  // add a sticker
-  function onAddSticker(){
-    // show the emoji picker modal
-    setIsModalVisible(true);
-  }
-  // close the modal
-  function onModalClose(){
-    // reset the emoji picker modal
-    setIsModalVisible(false);
-  }
-  // save image
-  function onSaveImageAsync(){
-    // later
-  }
-
-
   // the view to show depending on the Use this photo
   let viewToShow;
 
   // Show app options if false, no extra
   // button to display.
-  if(showAppOptions)
+  if(!showAppOptions)
    viewToShow = (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -76,23 +48,20 @@ export default function Index() {
           imgSource={PlaceholderImage} 
           selectedImage={selectedImage} 
         />
-      </View>
-      <View style={[styles.optionsContainer]}>
-        <View style={[styles.optionsRow]}>
-          <IconButton icon="refresh" label="Reset" onPress={onReset} />
-          <CircleButton onPress={onAddSticker} />
-          <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
+      </View>     
+        <View style={styles.footerContainer}>
+          <Button theme="primary" label="Choose a photo" onPress={pickImageAsync}/>
+          <Button label="Use this photo" />
         </View>
-      </View>
-      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
-        {/* https://docs.expo.dev/tutorial/create-a-modal/#display-a-list-of-emoji */}
-      </EmojiPicker>
+        <View>
+          <Text style={styles.text}>Sticker Smash</Text>
+        </View>
     </View>
   );
 
   // Show app options if true, extra
   // button to display.
-  if(!showAppOptions)
+  if(showAppOptions)
     viewToShow = (
      <View style={styles.container}>
        <View style={styles.imageContainer}>
@@ -137,13 +106,5 @@ const styles = StyleSheet.create({
   footerContainer: {
     flex: 1 / 3,
     alignItems: 'center',
-  },
-  optionsContainer: {
-    position: "absolute",
-    bottom: 80,
-  },
-  optionsRow: {
-    alignItems: "center",
-    flexDirection: "row",
   },
 });

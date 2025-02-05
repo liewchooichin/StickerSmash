@@ -4,7 +4,19 @@
 ## Reference:
 https://docs.expo.dev/tutorial
 
+## void
 
+In JavaScript, void is an operator.  It's a unary operator, meaning it operates on a single operand. 1   Its primary purpose is to evaluate an expression and then return undefined, regardless of the expression's result.
+
+The void operator is often used merely to obtain the undefined primitive value, usually using void(0) (which is equivalent to void 0).
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void
+
+
+
+## Modal
+
+Modals are used to draw a user's attention toward critical information or guide them to take action.
 
 
 ## Image object from ImagePicker.
