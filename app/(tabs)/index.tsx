@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 //import { Link } from "expo-router";
 import { useState } from "react";
+import { type ImageSource } from "expo-image";
 
 import * as ImagePicker from "expo-image-picker"
 import Button from "@/components/Button";
@@ -8,6 +9,8 @@ import ImageViewer from "@/components/ImageViewer";
 import IconButton from "@/components/IconButton";
 import CircleButton from "@/components/CircleButton";
 import EmojiPicker from "@/components/EmojiPicker";
+import EmojiList from "@/components/EmojiList";
+import EmojiSticker from "@/components/EmojiSticker";
 
 
 const PlaceholderImage = require("@/assets/images/tutorial/background-image.png");
@@ -20,6 +23,8 @@ export default function Index() {
   const[showAppOptions, setShowAppOptions] = useState<boolean>(false);
   // when user press the Add moji sticker, the state will become true
   const[isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  // show the row of emojis that a user can pick
+  const[pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(undefined);
 
 
   async function pickImageAsync() {
@@ -65,18 +70,13 @@ export default function Index() {
 
   // the view to show depending on the Use this photo
   let viewToShow;
+  let viewOptions;
+
 
   // Show app options if false, no extra
   // button to display.
   if(showAppOptions)
-   viewToShow = (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <ImageViewer 
-          imgSource={PlaceholderImage} 
-          selectedImage={selectedImage} 
-        />
-      </View>
+   viewOptions = (
       <View style={[styles.optionsContainer]}>
         <View style={[styles.optionsRow]}>
           <IconButton icon="refresh" label="Reset" onPress={onReset} />
@@ -84,33 +84,34 @@ export default function Index() {
           <IconButton icon="save-alt" label="Save" onPress={onSaveImageAsync} />
         </View>
       </View>
-      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
-        {/* https://docs.expo.dev/tutorial/create-a-modal/#display-a-list-of-emoji */}
-      </EmojiPicker>
-    </View>
   );
+  if(!showAppOptions)
+    viewOptions = (
+      <View style={styles.footerContainer}>
+          <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
+          <Button label="Use this photo" onPress={() => setShowAppOptions(true)} />
+      </View>
+  )
 
   // Show app options if true, extra
   // button to display.
-  if(!showAppOptions)
     viewToShow = (
      <View style={styles.container}>
        <View style={styles.imageContainer}>
-         <ImageViewer 
-           imgSource={PlaceholderImage} 
-           selectedImage={selectedImage} 
-         />
+         <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
+         {pickedEmoji && (<EmojiSticker imageSize={40} stickerSource={pickedEmoji} />)}
        </View>     
-         <View style={styles.footerContainer}>
-           <Button theme="primary" label="Choose a photo" onPress={pickImageAsync}/>
-           <Button label="Use this photo" onPress={()=>setShowAppOptions(true)} />
-         </View>
-         <View>
-           <Text style={styles.text}>Sticker Smash</Text>
-         </View>
+      { viewOptions }
+      <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
+        <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
+      </EmojiPicker>
+      <View>
+        <Text style={styles.text}>Sticker Smash</Text>
+      </View>
      </View>
    );
  
+  
 
   // the view to show
   return viewToShow;

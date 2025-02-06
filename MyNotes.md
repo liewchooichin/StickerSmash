@@ -4,6 +4,12 @@
 ## Reference:
 https://docs.expo.dev/tutorial
 
+## To check phone connectivity
+
+```
+sudo arp-scan -l -r 3 | grep {Phone Static Assigned IP} 
+```
+
 ## void
 
 In JavaScript, void is an operator.  It's a unary operator, meaning it operates on a single operand. 1   Its primary purpose is to evaluate an expression and then return undefined, regardless of the expression's result.
