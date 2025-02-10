@@ -1,7 +1,9 @@
+import * as MediaLibrary from 'expo-media-library';
+import { captureRef } from 'react-native-view-shot';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View, StyleSheet } from "react-native";
 //import { Link } from "expo-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { type ImageSource } from "expo-image";
 
 import * as ImagePicker from "expo-image-picker"
@@ -18,6 +20,10 @@ const PlaceholderImage = require("@/assets/images/tutorial/background-image.png"
 
 export default function Index() {
 
+  // request permission to access the device's media libary
+  const[status, requestPermission] = MediaLibrary.usePermissions();
+  // ref to the image captured
+  const imageRef = useRef<View>(null);
   // select an image from the gallery
   const[selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
   // show these options after an image is picked/selected
@@ -27,6 +33,10 @@ export default function Index() {
   // show the row of emojis that a user can pick
   const[pickedEmoji, setPickedEmoji] = useState<ImageSource | undefined>(undefined);
 
+  // check the permission to use the media library
+  if(status === null){
+    requestPermission();
+  }
 
   async function pickImageAsync() {
     // launch image gallery
@@ -47,6 +57,25 @@ export default function Index() {
     }
   };
 
+  // save the image
+  async function saveImage(){
+    try{
+      const localUri = await captureRef(
+        imageRef,
+        {
+          height: 440,
+          quality: 1,
+        }
+      );
+      await MediaLibrary.saveToLibraryAsync(localUri);
+      if(localUri){
+        alert("Saved.");
+      }
+    } catch(e){
+      console.log(e);
+    }
+  }
+
   // handler for app option buttons
   
   // reset the view
@@ -65,9 +94,8 @@ export default function Index() {
   }
   // save image
   function onSaveImageAsync(){
-    // later
+    saveImage();
   }
-
 
   // the view to show depending on the Use this photo
   let viewToShow;
@@ -99,8 +127,10 @@ export default function Index() {
     viewToShow = (
      <GestureHandlerRootView style={styles.container}>
        <View style={styles.imageContainer}>
-         <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
-         {pickedEmoji && (<EmojiSticker imageSize={40} stickerSource={pickedEmoji} />)}
+          <View ref={imageRef} collapsable={false}>
+            <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
+              {pickedEmoji && (<EmojiSticker imageSize={40} stickerSource={pickedEmoji} />)}
+          </View>
        </View>     
       { viewOptions }
       <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
