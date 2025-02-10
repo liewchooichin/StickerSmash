@@ -13,6 +13,8 @@ type Props = {
 
 export default function EmojiSticker({imageSize, stickerSource}: Props){
     const scaleImage = useSharedValue(imageSize);
+    const translateX = useSharedValue(0);
+    const translateY = useSharedValue(0);
     
     // handle double tap
     function handleDoubleTap(){
@@ -32,7 +34,7 @@ export default function EmojiSticker({imageSize, stickerSource}: Props){
 
     // When the function handlers are moved outside,
     // the app will just stop, exit.
-    //QUESTION: Why are the function handler cannot
+    // QUESTION: Why are the function handler cannot
     // be moved outside?
     // double tap
     const doubleTap = 
@@ -52,10 +54,25 @@ export default function EmojiSticker({imageSize, stickerSource}: Props){
             height: withSpring(scaleImage.value),
         };
     });
-
+    // get new position to pan the emoji
+    const drag = Gesture.Pan().onChange(
+        (event) => {
+            translateX.value += event.changeX;
+            translateY.value += event.changeY;
+        }
+    );
+    // pan the emoji
+    const containerStyle = useAnimatedStyle(() => {
+        return {
+            transform: [
+                {translateX: translateX.value}, 
+                {translateY: translateY.value},
+        ]};
+    });
 
     return (
-        <View style={styles.emojiStickerContainer} >
+        <GestureDetector gesture={drag}>
+        <Animated.View style={[containerStyle, styles.emojiStickerContainer]} >
             <GestureDetector gesture={doubleTap}>
             <Animated.Image 
                 source={stickerSource} 
@@ -63,7 +80,8 @@ export default function EmojiSticker({imageSize, stickerSource}: Props){
                 style={[imageStyle, {width: imageSize, height: imageSize}]}
             />
             </GestureDetector>
-        </View>
+        </Animated.View>
+        </GestureDetector>
     )
 }
 
