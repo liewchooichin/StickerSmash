@@ -1,3 +1,4 @@
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View, StyleSheet } from "react-native";
 //import { Link } from "expo-router";
 import { useState } from "react";
@@ -96,7 +97,7 @@ export default function Index() {
   // Show app options if true, extra
   // button to display.
     viewToShow = (
-     <View style={styles.container}>
+     <GestureHandlerRootView style={styles.container}>
        <View style={styles.imageContainer}>
          <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
          {pickedEmoji && (<EmojiSticker imageSize={40} stickerSource={pickedEmoji} />)}
@@ -108,7 +109,7 @@ export default function Index() {
       <View>
         <Text style={styles.text}>Sticker Smash</Text>
       </View>
-     </View>
+     </GestureHandlerRootView>
    );
  
   
