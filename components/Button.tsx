@@ -2,7 +2,7 @@ import { StyleSheet, View, Pressable, Text } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 function pressAlert(){
-    alert("You pressed a button.");
+    alert("Image selected");
 }
 
 

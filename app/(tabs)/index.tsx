@@ -16,8 +16,8 @@ import EmojiList from "@/components/EmojiList";
 import EmojiSticker from "@/components/EmojiSticker";
 
 
-const PlaceholderImage = require("@/assets/images/tutorial/background-image.png");
-
+//const PlaceholderImage = require("@/assets/images/tutorial/background-image.png");
+const PlaceholderImage = require("@/assets/images/tutorial/background-image.jpg");
 export default function Index() {
 
   // request permission to access the device's media libary
@@ -136,9 +136,6 @@ export default function Index() {
       <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
         <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
       </EmojiPicker>
-      <View>
-        <Text style={styles.text}>Sticker Smash</Text>
-      </View>
      </GestureHandlerRootView>
    );
  
@@ -161,7 +158,7 @@ const styles = StyleSheet.create({
   button: {
     fontSize: 20,
     textDecorationLine: 'underline',
-    color: '#ffffff'
+    color: '#ffffff',
   },
   imageContainer: {
     flex: 1,
